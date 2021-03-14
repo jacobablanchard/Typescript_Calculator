@@ -38,6 +38,7 @@ body,
 .CalculatorButton {
   min-width: 50px;
   min-height: 60px;
+  max-width: 300px;
   width: 100%;
   font-size: xx-large;
 }

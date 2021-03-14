@@ -1,8 +1,11 @@
 import * as React from "react";
 import { CalculatorButton } from "./CalculatorButton";
+import { OperationType } from "./Enums/OperationType";
+import { OperationButton } from "./OperationButton";
 
 export interface ICalculatorButtonsProps {
   ButtonPressedCallback: (num: number) => void;
+  OperationPressedCallback: (op: OperationType) => void;
 }
 
 export interface ICalculatorButtonsState {}
@@ -21,6 +24,18 @@ export default class CalculatorButtons extends React.Component<
     return (
       <table className="CalculatorButtons">
         <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <OperationButton
+                ButtonPressedCallback={this.props.OperationPressedCallback}
+                DisplayString="🆑"
+                myOperationType={OperationType.Clear}
+              />
+            </td>
+          </tr>
           <tr>
             <td>
               <CalculatorButton
@@ -41,6 +56,13 @@ export default class CalculatorButtons extends React.Component<
                 myNumber={3}
                 DisplayNumber="3"
                 ButtonPressedCallback={this.props.ButtonPressedCallback}
+              />
+            </td>
+            <td>
+              <OperationButton
+                DisplayString="➕"
+                myOperationType={OperationType.Add}
+                ButtonPressedCallback={this.props.OperationPressedCallback}
               />
             </td>
           </tr>
@@ -66,6 +88,13 @@ export default class CalculatorButtons extends React.Component<
                 ButtonPressedCallback={this.props.ButtonPressedCallback}
               />
             </td>
+            <td>
+              <OperationButton
+                DisplayString="➖"
+                myOperationType={OperationType.Subtract}
+                ButtonPressedCallback={this.props.OperationPressedCallback}
+              />
+            </td>
           </tr>
           <tr>
             <td>
@@ -89,6 +118,13 @@ export default class CalculatorButtons extends React.Component<
                 ButtonPressedCallback={this.props.ButtonPressedCallback}
               />
             </td>
+            <td>
+              <OperationButton
+                DisplayString="✖"
+                myOperationType={OperationType.Multiply}
+                ButtonPressedCallback={this.props.OperationPressedCallback}
+              />
+            </td>
           </tr>
           <tr>
             <td colSpan={3}>
@@ -96,6 +132,13 @@ export default class CalculatorButtons extends React.Component<
                 myNumber={0}
                 DisplayNumber="0"
                 ButtonPressedCallback={this.props.ButtonPressedCallback}
+              />
+            </td>
+            <td>
+              <OperationButton
+                DisplayString="➗"
+                myOperationType={OperationType.Divide}
+                ButtonPressedCallback={this.props.OperationPressedCallback}
               />
             </td>
           </tr>
