@@ -1,5 +1,4 @@
 import * as React from "react";
-import { OperationType, OperationToText } from "./Enums/OperationType";
 
 export interface ICurrentNumberDisplayProps {
   displayString: string;

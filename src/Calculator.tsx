@@ -11,6 +11,7 @@ export interface IAppState {
   operand1Text: string;
   operand2: number;
   operand2Text: string;
+  result: string;
   Operation: OperationType;
   CurrentState: StateChart;
 }
@@ -18,6 +19,7 @@ export interface IAppState {
 enum StateChart {
   FirstOperand,
   SecondOperand,
+  Result,
 }
 
 export default class Calculator extends React.Component<IAppProps, IAppState> {
@@ -25,11 +27,13 @@ export default class Calculator extends React.Component<IAppProps, IAppState> {
     super(props);
     this.OnNumberButtonPressed = this.OnNumberButtonPressed.bind(this);
     this.OnOperationButtonPressed = this.OnOperationButtonPressed.bind(this);
+    this.computeResult = this.computeResult.bind(this);
     this.state = {
       operand1: 0,
       operand1Text: "",
       operand2: 0,
       operand2Text: "",
+      result: "",
       Operation: OperationType.None,
       CurrentState: StateChart.FirstOperand,
     };
@@ -39,16 +43,77 @@ export default class Calculator extends React.Component<IAppProps, IAppState> {
     if (process.env.NODE_ENV === "development") {
       console.log("Number: " + buttonPressed.toString());
     }
-    if (this.state.CurrentState === StateChart.FirstOperand) {
+
+    if (this.state.CurrentState === StateChart.Result) {
       this.setState((state) => {
-        return { operand1Text: state.operand1Text + buttonPressed.toString() };
+        return {
+          operand1: buttonPressed,
+          operand1Text: buttonPressed.toString(),
+          operand2: 0,
+          operand2Text: "",
+          result: "",
+          Operation: OperationType.None,
+          CurrentState: StateChart.FirstOperand,
+        };
+      });
+    } else if (this.state.CurrentState === StateChart.FirstOperand) {
+      this.setState((state) => {
+        return {
+          operand1Text: state.operand1Text + buttonPressed.toString(),
+          operand1: +(state.operand1Text + buttonPressed.toString()),
+        };
       });
     } else if (this.state.CurrentState === StateChart.SecondOperand) {
       this.setState((state) => {
-        return { operand2Text: state.operand2Text + buttonPressed.toString() };
+        return {
+          operand2Text: state.operand2Text + buttonPressed.toString(),
+          operand2: +(state.operand2Text + buttonPressed.toString()),
+        };
       });
     } else {
       throw new Error("Unknown state '" + StateChart[this.state.CurrentState]);
+    }
+  }
+
+  private computeResult() {
+    switch (this.state.Operation) {
+      case OperationType.Add:
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            "Computing result ADD " +
+              this.state.operand1.toString() +
+              " " +
+              this.state.operand2.toString() +
+              " " +
+              (this.state.operand1 + this.state.operand2).toString()
+          );
+        }
+        this.setState({
+          result: (this.state.operand1 + this.state.operand2).toString(),
+        });
+        break;
+
+      case OperationType.Subtract:
+        this.setState({
+          result: (this.state.operand1 - this.state.operand2).toString(),
+        });
+        break;
+
+      case OperationType.Multiply:
+        this.setState({
+          result: (this.state.operand1 * this.state.operand2).toString(),
+        });
+        break;
+
+      case OperationType.Divide:
+        this.setState({
+          result: (this.state.operand1 / this.state.operand2).toString(),
+        });
+        break;
+
+      default:
+        console.log("Unhandled state");
+        break;
     }
   }
 
@@ -60,6 +125,10 @@ export default class Calculator extends React.Component<IAppProps, IAppState> {
       case OperationType.Equals: {
         // Only do something if we're on the second operand
         if (this.state.CurrentState === StateChart.SecondOperand) {
+          this.computeResult();
+          this.setState({
+            CurrentState: StateChart.Result,
+          });
         }
         break;
       }
@@ -95,7 +164,10 @@ export default class Calculator extends React.Component<IAppProps, IAppState> {
             " " +
             OperationToText(this.state.Operation) +
             " " +
-            this.state.operand2Text
+            this.state.operand2Text +
+            (this.state.CurrentState === StateChart.Result
+              ? " = " + this.state.result
+              : "")
           }
         />
         <CurrentNumberDisplay
