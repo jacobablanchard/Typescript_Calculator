@@ -1,3 +1,9 @@
+# Typescript_Calculator
+
+This is a simple React Application I used to learn the basics of React! There's not a lot of features, but this was still a good learning experience!
+
+Check it out [here](https://jacobablanchard.github.io/Typescript_Calculator/)!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
